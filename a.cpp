@@ -1,49 +1,69 @@
 #include<bits/stdc++.h>
 using namespace std;
+#define maxN 20000
 
-int n;
-string s;
-int f[2000][2000];
-int m[2000];
+typedef pair<pair<int, int>, int> condition;
+
+condition s[maxN], ss[maxN];
+int t[maxN], d[maxN];
+map<int, int> f;
+int cnt;
+int l , n;
+
+
+
+bool check(int x) {
+    for (int i = 1; i <= x; ++i) {
+        ss[i] = s[i];
+    }
+    sort(ss+1, ss+x+1);
+    for (int i = 1; i <= cnt; ++i) d[i] = -1;
+    for (int i = 1; i <= x; ++i) {
+        int a = ss[i].first.first - 1;
+        int b = ss[i].first.second;
+        if (d[a] == -1 || d[b] == -1) {
+            if (d[a] != -1) d[b] = (d[a] + ss[i].second) % 2;
+            else if (d[b] != -1) d[a] = (d[b] + ss[i].second) % 2;
+            else {
+                d[a] = 0;
+                d[b] = ss[i].second;
+            }
+        }
+        else if ((d[a] + d[b]) % 2 != ss[i].second) return false;
+
+    }
+}
 
 int main() {
-    cin >> s;
-    cin >> n;
-    int l = s.size();
-    m[l-1] = 1 % n;
-    for (int i = l - 2; i >= 0; --i) {
-        m[i] = (m[i+1] * 10) % n;
-
+    cin >> l >> n;
+    for (int i = 1; i <= n; ++i) {
+        string st;
+        cin >> s[i].first.first >> s[i].first.second >> st;
+        s[i].second = st == "odd";
+        f[s[i].first.first] = 0;
+        f[s[i].first.second] = 0;
     }
-    for (int i = 0; i <= l; ++i) 
-        for (int j = 0; j <= n; ++j)
-            f[i][j] = -1;
-    f[l][0] = 0;
-    for (int i = l-1; i >= 0; --i) {
-        if (s[i] == '?') {
-            for (int j = 0; j < n; ++j) {
-                for (int k = (i == 0 ? 1 : 0); k < 10; ++k) {
-                    if (f[i][j] == -1) {
-                        int jj = ((j - k * m[i]) % n + n) % n;
-                        if (f[i+1][jj] != -1) f[i][j] = k;
-                    } 
-                }
-            }
-        } 
+    cnt = 0;
+    for (auto& x : f) {
+        x.second = ++cnt;
+    }
+    for (int i = 1; i <= n; ++i) {
+        s[i].first.first = f[s[i].first.first];
+        s[i].first.second = f[s[i].first.second];
+    }
+    // for (int i = 1; i <= n; ++i) {cerr << s[i].first.first << " " << s[i].first.second << " " << s[i].second << endl;}
+    int L = 1, R = n;
+    int res = 0;
+    while (L <= R) {
+        int M = (L+R) / 2;
+        // cerr << M << endl;
+        if (check(M)) {
+            res = M;
+            L = M + 1;
+        }
         else {
-            for (int j = 0; j < n; ++j) {
-                int k = s[i] - '0';
-                int jj = ((j - k * m[i]) % n + n) % n;
-                if (f[i+1][jj] != -1) f[i][j] = k;
-            }
+            R = M - 1;
         }
     }
-    if (f[0][0] == -1) cout << '*';
-    else {
-        int j = 0;
-        for (int i = 0; i < l; ++i) {
-            cout << f[i][j];
-            j = ((j - f[i][j] * m[i]) % n + n) % n;
-        }
-    }
+    cout << res;
 }
