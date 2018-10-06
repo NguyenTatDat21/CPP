@@ -11,7 +11,12 @@
         "chrono": "cpp",
         "limits": "cpp",
         "valarray": "cpp",
-        "bitset": "cpp"
+        "bitset": "cpp",
+        "array": "cpp",
+        "forward_list": "cpp",
+        "initializer_list": "cpp",
+        "iosfwd": "cpp",
+        "ostream": "cpp"
     },
     "C_Cpp.errorSquiggles": "Enabled"
 }
