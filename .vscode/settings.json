@@ -16,7 +16,9 @@
         "forward_list": "cpp",
         "initializer_list": "cpp",
         "iosfwd": "cpp",
-        "ostream": "cpp"
+        "ostream": "cpp",
+        "complex": "cpp",
+        "cstdlib": "cpp"
     },
     "C_Cpp.errorSquiggles": "Enabled"
 }
